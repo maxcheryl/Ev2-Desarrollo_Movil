@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -119,13 +118,62 @@ fun EscanearQrScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Estados del escaneo con transición suave entre ellos
+            // Estados sin cámara: animados con Crossfade
             val estadoQr = when {
                 !permisoConcedido -> EstadoQr.Permiso
                 uiState.escaneando -> EstadoQr.Escaneando
                 uiState.contenido != null && uiState.esValido && uiState.mensaje == null ->
                     EstadoQr.Buscando
                 else -> EstadoQr.Resultado
+            }
+
+            // El estado Escaneando queda fuera del Crossfade a propósito:
+            // el PreviewView de la cámara se desplaza fuera de su Box si vive
+            // en una capa con alpha que lo vuelve a medir durante la transición.
+            if (estadoQr == EstadoQr.Escaneando) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = "Escanea un código QR",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Text(
+                        text = "Enfoca el código QR dentro del marco central.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+
+                    // Con weight(1f) la cámara toma todo el espacio restante en una
+                    // única medición, que es lo que espera el PreviewView
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        QrScanner(
+                            onQrCodeScanned = { contenido ->
+                                qrViewModel.onQrDetectado(contenido)
+                            },
+                            modifier = Modifier.fillMaxSize()
+                        )
+
+                        // Marco de ayuda para centrar el código QR
+                        Surface(
+                            modifier = Modifier
+                                .size(250.dp)
+                                .align(Alignment.Center),
+                            color = Color.Transparent,
+                            shape = MaterialTheme.shapes.medium,
+                            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                        ) {}
+                    }
+                }
+                return@Column
             }
 
             Crossfade(
@@ -171,47 +219,8 @@ fun EscanearQrScreen(
                             }
                         }
                     }
-                    EstadoQr.Escaneando -> {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            Text(
-                                text = "Escanea un código QR",
-                                style = MaterialTheme.typography.titleLarge
-                            )
-
-                            Text(
-                                text = "Enfoca el código QR dentro del marco central.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
-
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(400.dp)
-                            ) {
-                                QrScanner(
-                                    onQrCodeScanned = { contenido ->
-                                        qrViewModel.onQrDetectado(contenido)
-                                    },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-
-                                // Marco de ayuda para centrar el código QR
-                                Surface(
-                                    modifier = Modifier
-                                        .size(250.dp)
-                                        .align(Alignment.Center),
-                                    color = Color.Transparent,
-                                    shape = MaterialTheme.shapes.medium,
-                                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                                ) {}
-                            }
-                        }
-                    }
+                    // Este estado ya se atendió fuera del Crossfade
+                    EstadoQr.Escaneando -> {}
                     EstadoQr.Buscando -> {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
