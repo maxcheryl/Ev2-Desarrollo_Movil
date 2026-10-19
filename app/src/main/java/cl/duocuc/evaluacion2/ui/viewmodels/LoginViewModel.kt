@@ -22,6 +22,7 @@ class LoginViewModel : ViewModel() {
     private val _estado = MutableStateFlow(LoginUiState())
     val estado: StateFlow<LoginUiState> = _estado
 
+    // Escribir en un campo limpia su error: el usuario ya está corrigiendo el dato
     fun onCorreoChange(valor: String) {
         _estado.update {
             it.copy(
@@ -76,6 +77,7 @@ class LoginViewModel : ViewModel() {
     }
 
     companion object {
+        // Cuenta ficticia de la demostración: no corresponde a ninguna cuenta real
         const val DEMO_CORREO = "dali.morales@max.com"
         const val DEMO_CLAVE = "dali123"
         const val DEMO_NOMBRE = "Dali"

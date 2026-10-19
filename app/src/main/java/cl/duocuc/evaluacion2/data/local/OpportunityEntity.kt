@@ -3,6 +3,13 @@ package cl.duocuc.evaluacion2.data.local
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/**
+ * Fila de la tabla «oportunidades».
+ * Los catálogos (tipo, prioridad, estado, potencial) se guardan como texto
+ * con el name del enum: es más simple de leer en la BD y permite
+ * mostrar la etiqueta bonita en la UI sin guardar dos veces lo mismo.
+ * Un id igual a 0 indica registro nuevo; Room le asigna uno autogenerado.
+ */
 @Entity(tableName = "oportunidades")
 data class OpportunityEntity(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,

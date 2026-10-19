@@ -22,11 +22,14 @@ private val LightColorScheme = lightColorScheme(
     surface = MaxBackgroundLight
 )
 
+/**
+ * Tema corporativa de Agencia Max.
+ * Se mantiene la paleta teal fija en claro y oscuro; no se usa
+ * el color dinámico de Android 12 para preservar la identidad visual.
+ */
 @Composable
 fun MaxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Color dinámico desactivado para mantener la identidad visual corporativa
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme

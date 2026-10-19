@@ -12,6 +12,11 @@ import cl.duocuc.evaluacion2.ui.viewmodels.OportunidadViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.QrViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.UbicacionViewModel
 
+/**
+ * Única Activity de la app (patrón single-activity con Compose).
+ * Los ViewModels se crean aquí y se comparten con toda la navegación,
+ * de modo que sus estados sobreviven al cambio de pantalla.
+ */
 class MainActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()

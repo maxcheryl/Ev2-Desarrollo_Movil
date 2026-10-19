@@ -37,6 +37,7 @@ class OportunidadViewModel(application: Application) : AndroidViewModel(applicat
     )
 
     val oportunidades: StateFlow<List<OpportunityEntity>> = repository.observeAll()
+        // La consulta de Room queda viva solo mientras alguien la esté mirando
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _cargando = MutableStateFlow(true)
@@ -46,6 +47,7 @@ class OportunidadViewModel(application: Application) : AndroidViewModel(applicat
     val editor: StateFlow<OportunidadEditorUiState> = _editor.asStateFlow()
 
     init {
+        // Al abrir el módulo se cargan los datos de ejemplo si la tabla está vacía
         viewModelScope.launch {
             try {
                 repository.semillarSiVacia()
@@ -54,9 +56,6 @@ class OportunidadViewModel(application: Application) : AndroidViewModel(applicat
             }
         }
     }
-
-    fun porId(id: Long): OpportunityEntity? =
-        oportunidades.value.firstOrNull { it.id == id }
 
     // ---------------------------------------------------------------------
     // Editor del formulario
@@ -209,6 +208,7 @@ class OportunidadViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     companion object {
+        // Factory clásica para inyectarle el Application (Room lo necesita)
         fun factory(application: Application): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

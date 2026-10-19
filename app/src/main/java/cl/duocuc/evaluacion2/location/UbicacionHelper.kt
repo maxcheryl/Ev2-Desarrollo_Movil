@@ -50,6 +50,7 @@ object UbicacionHelper {
         val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        // Preferir GPS si está activo; si no, red (menos precisa pero más rápida)
         val proveedor = when {
             locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ->
                 LocationManager.GPS_PROVIDER
@@ -63,9 +64,13 @@ object UbicacionHelper {
             return
         }
 
+        // El timeout y el listener pueden llegar casi al mismo tiempo;
+        // esta bandera garantiza que solo se responda una vez
         var respondido = false
         val handler = Handler(Looper.getMainLooper())
 
+        // Si el proveedor tarda más de 10 segundos, se rinde para no
+        // dejar la pantalla cargando indefinidamente
         val timeout = Runnable {
             if (!respondido) {
                 respondido = true

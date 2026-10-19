@@ -16,8 +16,6 @@ class OportunidadRepository(private val dao: OpportunityDao) {
 
     fun observeAll(): Flow<List<OpportunityEntity>> = dao.observeAll()
 
-    suspend fun porId(id: Long): OpportunityEntity? = dao.getById(id)
-
     suspend fun contar(): Int = dao.count()
 
     /** Inserta una oportunidad nueva o actualiza una existente. Devuelve el id. */
@@ -25,6 +23,7 @@ class OportunidadRepository(private val dao: OpportunityDao) {
         return if (oportunidad.id == 0L) {
             dao.insert(oportunidad)
         } else {
+            // Al editar se conserva la fecha de creación original y solo se mueve la de actualización
             dao.update(oportunidad.copy(fechaActualizacion = System.currentTimeMillis()))
             oportunidad.id
         }

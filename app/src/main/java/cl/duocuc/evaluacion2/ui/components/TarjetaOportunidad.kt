@@ -21,7 +21,7 @@ import cl.duocuc.evaluacion2.data.model.Prioridad
 import cl.duocuc.evaluacion2.data.model.TipoOportunidad
 
 /**
- * Tarjeta reutilizable de una oportunidad usada en la lista y el inicio.
+ * Tarjeta reutilizable de una oportunidad, usada en la lista principal.
  * Muestra nombre, tipo, prioridad y estado de gestión.
  */
 @Composable

@@ -92,6 +92,8 @@ fun AppNavigation(
                 onUbicacion = { navController.navigate(Rutas.Ubicacion.route) },
                 onCerrarSesion = {
                     loginViewModel.cerrarSesion()
+                    // popUpTo(0) limpia toda la pila para que el botón atrás
+                    // no pueda volver al menú sin sesión iniciada
                     navController.navigate(Rutas.Login.route) {
                         popUpTo(0) { inclusive = true }
                     }

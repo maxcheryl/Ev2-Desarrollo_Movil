@@ -27,6 +27,7 @@ class UbicacionViewModel(application: Application) : AndroidViewModel(applicatio
     val uiState: StateFlow<UbicacionUiState> = _uiState.asStateFlow()
 
     fun obtenerUbicacion() {
+        // Evita disparar otra consulta si aún no responde la anterior
         if (_uiState.value.obteniendo) return
         _uiState.value = UbicacionUiState(obteniendo = true)
 
@@ -37,10 +38,6 @@ class UbicacionViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun onPermisoDenegado() {
         _uiState.value = UbicacionUiState(resultado = ResultadoUbicacion.PermisoDenegado)
-    }
-
-    fun limpiar() {
-        _uiState.value = UbicacionUiState()
     }
 
     companion object {

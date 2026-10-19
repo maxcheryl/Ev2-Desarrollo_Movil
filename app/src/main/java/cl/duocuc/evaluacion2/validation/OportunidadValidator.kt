@@ -54,6 +54,8 @@ object OportunidadValidator {
         )
     }
 
+    // valueOf lanza excepción si el string no pertenece al enum;
+    // runCatching la convierte en un simple false para validar sin try/catch
     fun esTipoValido(valor: String): Boolean =
         runCatching { TipoOportunidad.valueOf(valor) }.isSuccess
 

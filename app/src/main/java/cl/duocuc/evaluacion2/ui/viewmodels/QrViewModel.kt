@@ -12,7 +12,6 @@ data class EscanearQrUiState(
     val escaneando: Boolean = true,
     val contenido: String? = null,
     val esValido: Boolean = false,
-    val codigo: String? = null,
     val mensaje: String? = null
 )
 
@@ -25,13 +24,16 @@ class QrViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(EscanearQrUiState())
     val uiState: StateFlow<EscanearQrUiState> = _uiState.asStateFlow()
 
+    /**
+     * Se dispara una sola vez por escaneo: la pantalla deja de pedir códigos
+     * al detectar el primero y aquí se decide si abre detalle o muestra error.
+     */
     fun onQrDetectado(contenido: String) {
         val valido = QrMaxValidator.esValido(contenido)
         _uiState.value = EscanearQrUiState(
             escaneando = false,
             contenido = contenido,
             esValido = valido,
-            codigo = if (valido) QrMaxValidator.extraerCodigo(contenido) else null,
             mensaje = if (valido) {
                 null
             } else {
