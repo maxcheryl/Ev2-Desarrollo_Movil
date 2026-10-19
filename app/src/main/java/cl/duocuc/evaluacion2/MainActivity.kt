@@ -4,24 +4,29 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import cl.duocuc.evaluacion2.ui.screens.PantallaInicialScreen
+import androidx.activity.viewModels
+import cl.duocuc.evaluacion2.navigation.AppNavigation
 import cl.duocuc.evaluacion2.ui.theme.AtenasTheme
+import cl.duocuc.evaluacion2.ui.viewmodels.LoginViewModel
+import cl.duocuc.evaluacion2.ui.viewmodels.OportunidadViewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val loginViewModel: LoginViewModel by viewModels()
+
+    private val oportunidadViewModel: OportunidadViewModel by viewModels {
+        OportunidadViewModel.factory(application)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             AtenasTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PantallaInicialScreen(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation(
+                    loginViewModel = loginViewModel,
+                    oportunidadViewModel = oportunidadViewModel
+                )
             }
         }
     }

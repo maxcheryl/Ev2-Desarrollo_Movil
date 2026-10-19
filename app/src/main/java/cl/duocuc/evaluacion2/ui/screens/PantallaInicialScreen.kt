@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.BusinessCenter
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,7 +27,10 @@ import androidx.compose.ui.unit.dp
  * y activaciones corporativas.
  */
 @Composable
-fun PantallaInicialScreen(modifier: Modifier = Modifier) {
+fun PantallaInicialScreen(
+    onIngresar: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,6 +67,15 @@ fun PantallaInicialScreen(modifier: Modifier = Modifier) {
         )
 
         Spacer(Modifier.height(32.dp))
+
+        Button(
+            onClick = onIngresar,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Ingresar a la app")
+        }
+
+        Spacer(Modifier.height(16.dp))
 
         // Indicador de modo demostración (datos ficticios)
         Text(
