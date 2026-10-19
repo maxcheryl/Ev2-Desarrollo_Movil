@@ -136,7 +136,11 @@ fun UbicacionScreen(
                 enter = fadeIn(animationSpec = tween(250)) + expandVertically(),
                 exit = fadeOut(animationSpec = tween(200)) + shrinkVertically()
             ) {
-                when {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    when {
                     uiState.obteniendo -> {
                         CircularProgressIndicator()
                         Text(
@@ -209,6 +213,7 @@ fun UbicacionScreen(
                             textAlign = TextAlign.Center,
                             color = MaterialTheme.colorScheme.error
                         )
+                    }
                     }
                 }
             }

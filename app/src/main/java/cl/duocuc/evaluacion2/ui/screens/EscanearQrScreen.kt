@@ -139,177 +139,183 @@ fun EscanearQrScreen(
             ) { estado ->
                 when (estado) {
                     EstadoQr.Permiso -> {
-                Icon(
-                    imageVector = Icons.Outlined.NoPhotography,
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = MaterialTheme.colorScheme.error
-                )
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = "Permiso de cámara requerido",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = "Para escanear códigos QR de oportunidades necesitamos acceso a la cámara del dispositivo.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                uiState.mensaje?.let {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center
-                    )
-                }
-                Spacer(Modifier.height(16.dp))
-                Button(onClick = { solicitudPermiso.launch(Manifest.permission.CAMERA) }) {
-                    Icon(Icons.Outlined.QrCodeScanner, contentDescription = null)
-                    Spacer(Modifier.size(8.dp))
-                    Text("Conceder permiso de cámara")
-                }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.NoPhotography,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                            Text(
+                                text = "Permiso de cámara requerido",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Para escanear códigos QR de oportunidades necesitamos acceso a la cámara del dispositivo.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            uiState.mensaje?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.error,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                            Button(onClick = { solicitudPermiso.launch(Manifest.permission.CAMERA) }) {
+                                Icon(Icons.Outlined.QrCodeScanner, contentDescription = null)
+                                Spacer(Modifier.size(8.dp))
+                                Text("Conceder permiso de cámara")
+                            }
+                        }
                     }
                     EstadoQr.Escaneando -> {
-                Text(
-                    text = "Escanea un código QR",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Text(
+                                text = "Escanea un código QR",
+                                style = MaterialTheme.typography.titleLarge
+                            )
 
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp)
-                ) {
-                    QrScanner(
-                        onQrCodeScanned = { contenido ->
-                            qrViewModel.onQrDetectado(contenido)
-                        },
-                        modifier = Modifier.fillMaxSize()
-                    )
+                            Text(
+                                text = "Enfoca el código QR dentro del marco central.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
 
-                    // Marco de ayuda para centrar el código QR
-                    Surface(
-                        modifier = Modifier
-                            .size(250.dp)
-                            .align(Alignment.Center),
-                        color = Color.Transparent,
-                        shape = MaterialTheme.shapes.medium,
-                        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
-                    ) {}
-                }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(400.dp)
+                            ) {
+                                QrScanner(
+                                    onQrCodeScanned = { contenido ->
+                                        qrViewModel.onQrDetectado(contenido)
+                                    },
+                                    modifier = Modifier.fillMaxSize()
+                                )
 
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = "Enfoca el código QR dentro del marco central.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
+                                // Marco de ayuda para centrar el código QR
+                                Surface(
+                                    modifier = Modifier
+                                        .size(250.dp)
+                                        .align(Alignment.Center),
+                                    color = Color.Transparent,
+                                    shape = MaterialTheme.shapes.medium,
+                                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+                                ) {}
+                            }
+                        }
                     }
                     EstadoQr.Buscando -> {
-                // Código válido: buscando la oportunidad asociada
-                CircularProgressIndicator()
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = "Código válido, buscando oportunidad…",
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            CircularProgressIndicator()
+                            Text(
+                                text = "Código válido, buscando oportunidad…",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
                     }
                     EstadoQr.Resultado -> {
-                // Resultado: código inválido, sin coincidencia o permiso denegado
-                val esCodigoInvalido = uiState.contenido != null && !uiState.esValido
-                val esSinCoincidencia = uiState.contenido != null && uiState.esValido
+                        // Resultado: código inválido, sin coincidencia o permiso denegado
+                        val esCodigoInvalido = uiState.contenido != null && !uiState.esValido
+                        val esSinCoincidencia = uiState.contenido != null && uiState.esValido
 
-                Icon(
-                    imageVector = when {
-                        esCodigoInvalido -> Icons.Outlined.ErrorOutline
-                        esSinCoincidencia -> Icons.Outlined.QrCodeScanner
-                        else -> Icons.Outlined.NoPhotography
-                    },
-                    contentDescription = null,
-                    modifier = Modifier.size(64.dp),
-                    tint = if (esCodigoInvalido) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.primary
-                    }
-                )
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = when {
-                        esCodigoInvalido -> "Código QR no válido"
-                        esSinCoincidencia -> "Oportunidad no encontrada"
-                        else -> "No se pudo escanear"
-                    },
-                    style = MaterialTheme.typography.titleLarge,
-                    color = if (esCodigoInvalido) {
-                        MaterialTheme.colorScheme.error
-                    } else {
-                        MaterialTheme.colorScheme.primary
-                    }
-                )
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = when {
+                                    esCodigoInvalido -> Icons.Outlined.ErrorOutline
+                                    esSinCoincidencia -> Icons.Outlined.QrCodeScanner
+                                    else -> Icons.Outlined.NoPhotography
+                                },
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = if (esCodigoInvalido) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                }
+                            )
+                            Text(
+                                text = when {
+                                    esCodigoInvalido -> "Código QR no válido"
+                                    esSinCoincidencia -> "Oportunidad no encontrada"
+                                    else -> "No se pudo escanear"
+                                },
+                                style = MaterialTheme.typography.titleLarge,
+                                color = if (esCodigoInvalido) {
+                                    MaterialTheme.colorScheme.error
+                                } else {
+                                    MaterialTheme.colorScheme.primary
+                                }
+                            )
 
-                if (esCodigoInvalido) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                        )
-                    ) {
-                        Text(
-                            text = uiState.contenido.orEmpty(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
+                            if (esCodigoInvalido) {
+                                Card(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                    )
+                                ) {
+                                    Text(
+                                        text = uiState.contenido.orEmpty(),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
 
-                uiState.mensaje?.let {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                            uiState.mensaje?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
 
-                if (esCodigoInvalido) {
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = "No se creó ni modificó ninguna oportunidad.",
-                        style = MaterialTheme.typography.bodySmall,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                            if (esCodigoInvalido) {
+                                Text(
+                                    text = "No se creó ni modificó ninguna oportunidad.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    textAlign = TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
 
-                Spacer(Modifier.height(20.dp))
-                if (permisoConcedido) {
-                    Button(
-                        onClick = { qrViewModel.reiniciarEscaneo() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Icon(Icons.Outlined.QrCodeScanner, contentDescription = null)
-                        Spacer(Modifier.size(8.dp))
-                        Text("Escanear otro código")
-                    }
-                } else {
-                    Button(
-                        onClick = { solicitudPermiso.launch(Manifest.permission.CAMERA) },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Conceder permiso de cámara")
-                    }
-                }
+                            if (permisoConcedido) {
+                                Button(
+                                    onClick = { qrViewModel.reiniciarEscaneo() },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Icon(Icons.Outlined.QrCodeScanner, contentDescription = null)
+                                    Spacer(Modifier.size(8.dp))
+                                    Text("Escanear otro código")
+                                }
+                            } else {
+                                Button(
+                                    onClick = { solicitudPermiso.launch(Manifest.permission.CAMERA) },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Conceder permiso de cámara")
+                                }
+                            }
+                        }
                     }
                 }
             }
