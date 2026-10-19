@@ -6,14 +6,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import cl.duocuc.evaluacion2.ui.screens.EscanearQrScreen
 import cl.duocuc.evaluacion2.ui.screens.FormularioOportunidadScreen
 import cl.duocuc.evaluacion2.ui.screens.LoginScreen
 import cl.duocuc.evaluacion2.ui.screens.MenuScreen
 import cl.duocuc.evaluacion2.ui.screens.OportunidadDetailScreen
 import cl.duocuc.evaluacion2.ui.screens.OportunidadListScreen
 import cl.duocuc.evaluacion2.ui.screens.PantallaInicialScreen
+import cl.duocuc.evaluacion2.ui.screens.UbicacionScreen
 import cl.duocuc.evaluacion2.ui.viewmodels.LoginViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.OportunidadViewModel
+import cl.duocuc.evaluacion2.ui.viewmodels.QrViewModel
+import cl.duocuc.evaluacion2.ui.viewmodels.UbicacionViewModel
 
 /** Rutas de la aplicación (fuente única de verdad). */
 sealed class Rutas(val route: String) {
@@ -21,6 +25,8 @@ sealed class Rutas(val route: String) {
     object Login : Rutas("login")
     object MenuPrincipal : Rutas("menu_principal")
     object Oportunidades : Rutas("oportunidades")
+    object EscanearQr : Rutas("escanear_qr")
+    object Ubicacion : Rutas("ubicacion")
     object DetalleOportunidad : Rutas("detalle_oportunidad/{id}") {
         fun conId(id: Long) = "detalle_oportunidad/$id"
     }
@@ -35,7 +41,9 @@ sealed class Rutas(val route: String) {
 @Composable
 fun AppNavigation(
     loginViewModel: LoginViewModel,
-    oportunidadViewModel: OportunidadViewModel
+    oportunidadViewModel: OportunidadViewModel,
+    qrViewModel: QrViewModel,
+    ubicacionViewModel: UbicacionViewModel
 ) {
     val navController = rememberNavController()
 
@@ -63,6 +71,8 @@ fun AppNavigation(
         composable(Rutas.MenuPrincipal.route) {
             MenuScreen(
                 onOportunidades = { navController.navigate(Rutas.Oportunidades.route) },
+                onEscanearQr = { navController.navigate(Rutas.EscanearQr.route) },
+                onUbicacion = { navController.navigate(Rutas.Ubicacion.route) },
                 onCerrarSesion = {
                     loginViewModel.cerrarSesion()
                     navController.navigate(Rutas.Login.route) {
@@ -79,9 +89,32 @@ fun AppNavigation(
                 onNueva = {
                     navController.navigate(Rutas.FormularioOportunidad.conId(0L))
                 },
+                onEscanear = {
+                    navController.navigate(Rutas.EscanearQr.route)
+                },
                 onSeleccionar = { id ->
                     navController.navigate(Rutas.DetalleOportunidad.conId(id))
                 }
+            )
+        }
+
+        composable(Rutas.EscanearQr.route) {
+            EscanearQrScreen(
+                qrViewModel = qrViewModel,
+                oportunidadViewModel = oportunidadViewModel,
+                onVolver = { navController.popBackStack() },
+                onOportunidadEncontrada = { id ->
+                    navController.navigate(Rutas.DetalleOportunidad.conId(id)) {
+                        popUpTo(Rutas.EscanearQr.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Rutas.Ubicacion.route) {
+            UbicacionScreen(
+                viewModel = ubicacionViewModel,
+                onVolver = { navController.popBackStack() }
             )
         }
 

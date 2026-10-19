@@ -9,6 +9,8 @@ import cl.duocuc.evaluacion2.navigation.AppNavigation
 import cl.duocuc.evaluacion2.ui.theme.AtenasTheme
 import cl.duocuc.evaluacion2.ui.viewmodels.LoginViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.OportunidadViewModel
+import cl.duocuc.evaluacion2.ui.viewmodels.QrViewModel
+import cl.duocuc.evaluacion2.ui.viewmodels.UbicacionViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -18,6 +20,12 @@ class MainActivity : ComponentActivity() {
         OportunidadViewModel.factory(application)
     }
 
+    private val qrViewModel: QrViewModel by viewModels()
+
+    private val ubicacionViewModel: UbicacionViewModel by viewModels {
+        UbicacionViewModel.factory(application)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,7 +33,9 @@ class MainActivity : ComponentActivity() {
             AtenasTheme {
                 AppNavigation(
                     loginViewModel = loginViewModel,
-                    oportunidadViewModel = oportunidadViewModel
+                    oportunidadViewModel = oportunidadViewModel,
+                    qrViewModel = qrViewModel,
+                    ubicacionViewModel = ubicacionViewModel
                 )
             }
         }
