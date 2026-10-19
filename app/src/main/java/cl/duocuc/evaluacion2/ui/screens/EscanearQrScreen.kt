@@ -3,6 +3,8 @@ package cl.duocuc.evaluacion2.ui.screens
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +72,7 @@ fun EscanearQrScreen(
     val oportunidades by oportunidadViewModel.oportunidades.collectAsState()
 
     var permisoConcedido by remember {
-        mutableStateOf(CameraPermissionHelper.tienePermiso(context))
+        mutableStateOf(CameraPermissionHelper.tienePermisoCamara(context))
     }
 
     val solicitudPermiso = rememberLauncherForActivityResult(
@@ -121,7 +123,22 @@ fun EscanearQrScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            if (!permisoConcedido) {
+            // Estados del escaneo con transición suave entre ellos
+            val estadoQr = when {
+                !permisoConcedido -> EstadoQr.Permiso
+                uiState.escaneando -> EstadoQr.Escaneando
+                uiState.contenido != null && uiState.esValido && uiState.mensaje == null ->
+                    EstadoQr.Buscando
+                else -> EstadoQr.Resultado
+            }
+
+            Crossfade(
+                targetState = estadoQr,
+                animationSpec = tween(300),
+                label = "estadoQr"
+            ) { estado ->
+                when (estado) {
+                    EstadoQr.Permiso -> {
                 Icon(
                     imageVector = Icons.Outlined.NoPhotography,
                     contentDescription = null,
@@ -156,7 +173,8 @@ fun EscanearQrScreen(
                     Spacer(Modifier.size(8.dp))
                     Text("Conceder permiso de cámara")
                 }
-            } else if (uiState.escaneando) {
+                    }
+                    EstadoQr.Escaneando -> {
                 Text(
                     text = "Escanea un código QR",
                     style = MaterialTheme.typography.titleLarge,
@@ -193,7 +211,8 @@ fun EscanearQrScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
-            } else if (uiState.contenido != null && uiState.esValido && uiState.mensaje == null) {
+                    }
+                    EstadoQr.Buscando -> {
                 // Código válido: buscando la oportunidad asociada
                 CircularProgressIndicator()
                 Spacer(Modifier.height(12.dp))
@@ -201,7 +220,8 @@ fun EscanearQrScreen(
                     text = "Código válido, buscando oportunidad…",
                     style = MaterialTheme.typography.bodyLarge
                 )
-            } else {
+                    }
+                    EstadoQr.Resultado -> {
                 // Resultado: código inválido, sin coincidencia o permiso denegado
                 val esCodigoInvalido = uiState.contenido != null && !uiState.esValido
                 val esSinCoincidencia = uiState.contenido != null && uiState.esValido
@@ -290,7 +310,17 @@ fun EscanearQrScreen(
                         Text("Conceder permiso de cámara")
                     }
                 }
+                    }
+                }
             }
         }
     }
+}
+
+/** Estados visuales de la pantalla de escaneo QR. */
+private enum class EstadoQr {
+    Permiso,
+    Escaneando,
+    Buscando,
+    Resultado
 }

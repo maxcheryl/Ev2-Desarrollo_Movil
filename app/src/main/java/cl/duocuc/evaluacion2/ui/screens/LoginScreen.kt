@@ -1,5 +1,11 @@
 package cl.duocuc.evaluacion2.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -114,14 +120,18 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // Error de credenciales inválidas
-        estado.mensajeError?.let {
-            Spacer(Modifier.height(8.dp))
+        // Error de credenciales inválidas (aparece/desaparece con animación)
+        AnimatedVisibility(
+            visible = estado.mensajeError != null,
+            enter = fadeIn(animationSpec = tween(250)) + expandVertically(),
+            exit = fadeOut(animationSpec = tween(200)) + shrinkVertically()
+        ) {
             Text(
-                text = it,
+                text = estado.mensajeError.orEmpty(),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
             )
         }
 

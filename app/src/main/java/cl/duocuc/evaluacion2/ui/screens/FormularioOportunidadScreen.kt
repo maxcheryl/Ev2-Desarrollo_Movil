@@ -1,5 +1,11 @@
 package cl.duocuc.evaluacion2.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -183,9 +189,14 @@ fun FormularioOportunidadScreen(
                 onValueChange = viewModel::onObservacionesChange
             )
 
-            editor.mensajeError?.let {
+            // Mensaje de error global (p. ej. fallo al guardar) con animación
+            AnimatedVisibility(
+                visible = editor.mensajeError != null,
+                enter = fadeIn(animationSpec = tween(250)) + expandVertically(),
+                exit = fadeOut(animationSpec = tween(200)) + shrinkVertically()
+            ) {
                 Text(
-                    text = it,
+                    text = editor.mensajeError.orEmpty(),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
                 )

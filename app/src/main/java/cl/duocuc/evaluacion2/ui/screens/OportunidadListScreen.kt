@@ -111,7 +111,8 @@ fun OportunidadListScreen(
                     items(oportunidades, key = { it.id }) { oportunidad ->
                         TarjetaOportunidad(
                             oportunidad = oportunidad,
-                            onClick = { onSeleccionar(oportunidad.id) }
+                            onClick = { onSeleccionar(oportunidad.id) },
+                            modifier = Modifier.animateItem()
                         )
                     }
                 }

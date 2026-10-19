@@ -1,5 +1,10 @@
 package cl.duocuc.evaluacion2.navigation
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -49,7 +54,18 @@ fun AppNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = Rutas.PantallaInicial.route
+        startDestination = Rutas.PantallaInicial.route,
+        // Transiciones suaves que acompañan la navegación sin retrasarla
+        enterTransition = {
+            fadeIn(animationSpec = tween(300)) +
+                slideInHorizontally(animationSpec = tween(300)) { ancho -> ancho / 4 }
+        },
+        exitTransition = { fadeOut(animationSpec = tween(250)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(250)) },
+        popExitTransition = {
+            fadeOut(animationSpec = tween(300)) +
+                slideOutHorizontally(animationSpec = tween(300)) { ancho -> ancho / 4 }
+        }
     ) {
         composable(Rutas.PantallaInicial.route) {
             PantallaInicialScreen(

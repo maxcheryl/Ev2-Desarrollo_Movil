@@ -3,6 +3,12 @@ package cl.duocuc.evaluacion2.ui.screens
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -124,79 +130,86 @@ fun UbicacionScreen(
                 Text("Obtener mi ubicación")
             }
 
-            when {
-                uiState.obteniendo -> {
-                    CircularProgressIndicator()
-                    Text(
-                        text = "Obteniendo ubicación…",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-                uiState.resultado is ResultadoUbicacion.Disponible -> {
-                    val ubicacion = uiState.resultado as ResultadoUbicacion.Disponible
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+            // Resultado animado al obtener (o fallar) la ubicación
+            AnimatedVisibility(
+                visible = uiState.obteniendo || uiState.resultado != null,
+                enter = fadeIn(animationSpec = tween(250)) + expandVertically(),
+                exit = fadeOut(animationSpec = tween(200)) + shrinkVertically()
+            ) {
+                when {
+                    uiState.obteniendo -> {
+                        CircularProgressIndicator()
+                        Text(
+                            text = "Obteniendo ubicación…",
+                            style = MaterialTheme.typography.bodyMedium
                         )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                    }
+
+                    uiState.resultado is ResultadoUbicacion.Disponible -> {
+                        val ubicacion = uiState.resultado as ResultadoUbicacion.Disponible
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                            )
                         ) {
-                            Text(
-                                text = "Latitud: " + String.format(
-                                    Locale.US,
-                                    "%.6f",
-                                    ubicacion.latitud
-                                ),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = "Longitud: " + String.format(
-                                    Locale.US,
-                                    "%.6f",
-                                    ubicacion.longitud
-                                ),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = "¡Ubicación lista para tu gestión!",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = "Latitud: " + String.format(
+                                        Locale.US,
+                                        "%.6f",
+                                        ubicacion.latitud
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = "Longitud: " + String.format(
+                                        Locale.US,
+                                        "%.6f",
+                                        ubicacion.longitud
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = "¡Ubicación lista para tu gestión!",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
                         }
                     }
-                }
 
-                uiState.resultado is ResultadoUbicacion.PermisoDenegado -> {
-                    Icon(
-                        imageVector = Icons.Outlined.ErrorOutline,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                    Text(
-                        text = "Permiso de ubicación denegado. Puedes seguir usando la aplicación con normalidad.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
+                    uiState.resultado is ResultadoUbicacion.PermisoDenegado -> {
+                        Icon(
+                            imageVector = Icons.Outlined.ErrorOutline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = "Permiso de ubicación denegado. Puedes seguir usando la aplicación con normalidad.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
 
-                uiState.resultado is ResultadoUbicacion.NoDisponible -> {
-                    Icon(
-                        imageVector = Icons.Outlined.ErrorOutline,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                    Text(
-                        text = "No fue posible obtener la ubicación. Revisa que el GPS o los datos estén activados e inténtalo nuevamente.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    uiState.resultado is ResultadoUbicacion.NoDisponible -> {
+                        Icon(
+                            imageVector = Icons.Outlined.ErrorOutline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Text(
+                            text = "No fue posible obtener la ubicación. Revisa que el GPS o los datos estén activados e inténtalo nuevamente.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             }
 

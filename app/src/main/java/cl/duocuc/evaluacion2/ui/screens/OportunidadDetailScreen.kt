@@ -1,5 +1,6 @@
 package cl.duocuc.evaluacion2.ui.screens
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -113,7 +114,8 @@ private fun DetalleContenido(oportunidad: OpportunityEntity, modifier: Modifier 
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 20.dp, vertical = 16.dp),
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .animateContentSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
