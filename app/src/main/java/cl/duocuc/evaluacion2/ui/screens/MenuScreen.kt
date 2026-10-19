@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun MenuScreen(
+    nombre: String,
     onOportunidades: () -> Unit,
     onEscanearQr: () -> Unit,
     onUbicacion: () -> Unit,
@@ -49,7 +50,7 @@ fun MenuScreen(
         Spacer(Modifier.height(8.dp))
 
         Text(
-            text = "Hola, Camila",
+            text = "Hola, $nombre",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )

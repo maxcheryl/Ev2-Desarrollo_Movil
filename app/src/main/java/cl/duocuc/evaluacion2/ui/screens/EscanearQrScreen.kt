@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ErrorOutline
@@ -55,7 +53,7 @@ import cl.duocuc.evaluacion2.ui.viewmodels.QrViewModel
 
 /**
  * Pantalla de escaneo de códigos QR para localizar oportunidades.
- * Solo los códigos válidos (prefijo «ATENAS:») pueden abrir una
+ * Solo los códigos válidos (prefijo «MAX:») pueden abrir una
  * oportunidad; un código inválido nunca modifica datos.
  */
 @OptIn(ExperimentalMaterial3Api::class)
@@ -118,10 +116,8 @@ fun EscanearQrScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Estados del escaneo con transición suave entre ellos
             val estadoQr = when {

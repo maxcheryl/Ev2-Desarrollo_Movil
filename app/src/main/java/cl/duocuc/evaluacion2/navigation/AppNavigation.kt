@@ -86,6 +86,7 @@ fun AppNavigation(
 
         composable(Rutas.MenuPrincipal.route) {
             MenuScreen(
+                nombre = LoginViewModel.DEMO_NOMBRE,
                 onOportunidades = { navController.navigate(Rutas.Oportunidades.route) },
                 onEscanearQr = { navController.navigate(Rutas.EscanearQr.route) },
                 onUbicacion = { navController.navigate(Rutas.Ubicacion.route) },

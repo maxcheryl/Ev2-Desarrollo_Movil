@@ -19,7 +19,7 @@ abstract class AppDatabase : RoomDatabase() {
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "atenas.db"
+                    "max.db"
                 ).build().also { instance = it }
             }
     }

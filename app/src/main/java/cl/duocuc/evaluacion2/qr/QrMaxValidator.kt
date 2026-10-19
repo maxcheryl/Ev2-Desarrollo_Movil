@@ -2,13 +2,13 @@ package cl.duocuc.evaluacion2.qr
 
 /**
  * Reglas de validación de los códigos QR de la aplicación.
- * Un código QR es válido para Agencia Atenas únicamente si comienza
- * con el prefijo «ATENAS:» seguido de un código identificador.
- * Ejemplo válido: ATENAS:OP-001
+ * Un código QR es válido para Agencia Max únicamente si comienza
+ * con el prefijo «MAX:» seguido de un código identificador.
+ * Ejemplo válido: MAX:OP-001
  */
-object QrAtenasValidator {
+object QrMaxValidator {
 
-    const val PREFIJO = "ATENAS:"
+    const val PREFIJO = "MAX:"
 
     fun esValido(contenido: String?): Boolean {
         return contenido != null &&

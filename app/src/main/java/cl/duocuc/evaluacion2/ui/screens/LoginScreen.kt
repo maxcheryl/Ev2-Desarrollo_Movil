@@ -67,7 +67,7 @@ fun LoginScreen(
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = "Agencia Atenas",
+            text = "Agencia Max",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary

@@ -50,7 +50,7 @@ class OportunidadRepository(private val dao: OpportunityDao) {
                 potencialComercial = PotencialComercial.ALTO.name,
                 estado = EstadoGestion.PROPUESTA_ENVIADA.name,
                 observaciones = "Datos de demostración ficticios. Buscar contacto del área de eventos.",
-                codigoQr = "ATENAS:OP-001",
+                codigoQr = "MAX:OP-001",
                 fechaCreacion = ahora - 5 * unDia,
                 fechaActualizacion = ahora - 1 * unDia
             ),
@@ -63,7 +63,7 @@ class OportunidadRepository(private val dao: OpportunityDao) {
                 potencialComercial = PotencialComercial.MEDIO.name,
                 estado = EstadoGestion.CONTACTO_PENDIENTE.name,
                 observaciones = "Datos de demostración ficticios.",
-                codigoQr = "ATENAS:OP-002",
+                codigoQr = "MAX:OP-002",
                 fechaCreacion = ahora - 3 * unDia,
                 fechaActualizacion = ahora - 2 * unDia
             ),
@@ -76,7 +76,7 @@ class OportunidadRepository(private val dao: OpportunityDao) {
                 potencialComercial = PotencialComercial.ALTO.name,
                 estado = EstadoGestion.EVENTO_IDENTIFICADO.name,
                 observaciones = "Datos de demostración ficticios. Evaluar costo de stand.",
-                codigoQr = "ATENAS:OP-003",
+                codigoQr = "MAX:OP-003",
                 fechaCreacion = ahora - 1 * unDia,
                 fechaActualizacion = ahora
             )

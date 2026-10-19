@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 /**
- * Pantalla inicial de la aplicación "Agencia Atenas".
+ * Pantalla inicial de la aplicación "Agencia Max".
  * Muestra la identidad visual del MVP de gestión de oportunidades
  * y activaciones corporativas.
  */
@@ -41,7 +41,7 @@ fun PantallaInicialScreen(
         // Logotipo de la agencia
         Icon(
             imageVector = Icons.Outlined.BusinessCenter,
-            contentDescription = "Logo de Agencia Atenas",
+            contentDescription = "Logo de Agencia Max",
             modifier = Modifier.size(96.dp),
             tint = MaterialTheme.colorScheme.primary
         )
@@ -50,7 +50,7 @@ fun PantallaInicialScreen(
 
         // Nombre de la aplicación
         Text(
-            text = "Agencia Atenas",
+            text = "Agencia Max",
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary

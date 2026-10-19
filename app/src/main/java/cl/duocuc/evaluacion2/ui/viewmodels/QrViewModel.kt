@@ -1,7 +1,7 @@
 package cl.duocuc.evaluacion2.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
-import cl.duocuc.evaluacion2.qr.QrAtenasValidator
+import cl.duocuc.evaluacion2.qr.QrMaxValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ data class EscanearQrUiState(
 
 /**
  * ViewModel del escáner QR: valida el contenido detectado según las
- * reglas de Agencia Atenas y controla el ciclo escanear → resultado.
+ * reglas de Agencia Max y controla el ciclo escanear → resultado.
  */
 class QrViewModel : ViewModel() {
 
@@ -26,16 +26,16 @@ class QrViewModel : ViewModel() {
     val uiState: StateFlow<EscanearQrUiState> = _uiState.asStateFlow()
 
     fun onQrDetectado(contenido: String) {
-        val valido = QrAtenasValidator.esValido(contenido)
+        val valido = QrMaxValidator.esValido(contenido)
         _uiState.value = EscanearQrUiState(
             escaneando = false,
             contenido = contenido,
             esValido = valido,
-            codigo = if (valido) QrAtenasValidator.extraerCodigo(contenido) else null,
+            codigo = if (valido) QrMaxValidator.extraerCodigo(contenido) else null,
             mensaje = if (valido) {
                 null
             } else {
-                "El código QR escaneado no pertenece a Agencia Atenas."
+                "El código QR escaneado no pertenece a Agencia Max."
             }
         )
     }

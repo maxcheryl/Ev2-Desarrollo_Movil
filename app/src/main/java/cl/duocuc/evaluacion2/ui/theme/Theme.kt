@@ -7,23 +7,23 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val DarkColorScheme = darkColorScheme(
-    primary = AtenasTealLight,
-    secondary = AtenasSlateLight,
-    tertiary = AtenasAmberLight,
-    background = AtenasBackgroundDark,
-    surface = AtenasBackgroundDark
+    primary = MaxTealLight,
+    secondary = MaxSlateLight,
+    tertiary = MaxAmberLight,
+    background = MaxBackgroundDark,
+    surface = MaxBackgroundDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = AtenasTeal,
-    secondary = AtenasSlate,
-    tertiary = AtenasAmber,
-    background = AtenasBackgroundLight,
-    surface = AtenasBackgroundLight
+    primary = MaxTeal,
+    secondary = MaxSlate,
+    tertiary = MaxAmber,
+    background = MaxBackgroundLight,
+    surface = MaxBackgroundLight
 )
 
 @Composable
-fun AtenasTheme(
+fun MaxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Color dinámico desactivado para mantener la identidad visual corporativa
     dynamicColor: Boolean = false,

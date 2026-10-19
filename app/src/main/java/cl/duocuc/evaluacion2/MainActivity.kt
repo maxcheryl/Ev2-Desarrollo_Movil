@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import cl.duocuc.evaluacion2.navigation.AppNavigation
-import cl.duocuc.evaluacion2.ui.theme.AtenasTheme
+import cl.duocuc.evaluacion2.ui.theme.MaxTheme
 import cl.duocuc.evaluacion2.ui.viewmodels.LoginViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.OportunidadViewModel
 import cl.duocuc.evaluacion2.ui.viewmodels.QrViewModel
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            AtenasTheme {
+            MaxTheme {
                 AppNavigation(
                     loginViewModel = loginViewModel,
                     oportunidadViewModel = oportunidadViewModel,

@@ -76,7 +76,8 @@ class LoginViewModel : ViewModel() {
     }
 
     companion object {
-        const val DEMO_CORREO = "camila.rojas@atenas.cl"
-        const val DEMO_CLAVE = "demo1234"
+        const val DEMO_CORREO = "dali.morales@max.com"
+        const val DEMO_CLAVE = "dali123"
+        const val DEMO_NOMBRE = "Dali"
     }
 }
