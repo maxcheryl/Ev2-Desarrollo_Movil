@@ -83,10 +83,19 @@ fun EscanearQrScreen(
         }
     }
 
+    // Cada entrada a la pantalla parte de cero: sin esto, el estado del
+    // último escaneo exitoso reabriría el detalle anterior en vez de la cámara
+    LaunchedEffect(Unit) {
+        qrViewModel.reiniciarEscaneo()
+    }
+
     // Con un código válido, buscar la oportunidad asociada
     LaunchedEffect(uiState.contenido, uiState.esValido, oportunidades) {
-        val contenido = uiState.contenido
-        if (contenido != null && uiState.esValido && uiState.mensaje == null &&
+        // Se lee el estado directo del ViewModel (no el rezagado de la
+        // recomposición) para no navegar con datos de un escaneo anterior
+        val estado = qrViewModel.uiState.value
+        val contenido = estado.contenido
+        if (contenido != null && estado.esValido && estado.mensaje == null &&
             oportunidades.isNotEmpty()
         ) {
             val encontrada = oportunidades.firstOrNull { it.codigoQr == contenido }
