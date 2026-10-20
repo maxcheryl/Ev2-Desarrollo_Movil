@@ -148,7 +148,8 @@ fun AppNavigation(
                 onVolver = { navController.popBackStack() },
                 onEditar = {
                     navController.navigate(Rutas.FormularioOportunidad.conId(id))
-                }
+                },
+                onEliminada = { navController.popBackStack() }
             )
         }
 

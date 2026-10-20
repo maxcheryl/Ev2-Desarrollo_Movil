@@ -9,6 +9,7 @@ import cl.duocuc.evaluacion2.data.local.AppDatabase
 import cl.duocuc.evaluacion2.data.local.OpportunityEntity
 import cl.duocuc.evaluacion2.data.repository.OportunidadRepository
 import cl.duocuc.evaluacion2.validation.OportunidadValidator
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -203,6 +204,22 @@ class OportunidadViewModel(application: Application) : AndroidViewModel(applicat
                         mensajeError = "No se pudo guardar la oportunidad: ${e.message}"
                     )
                 }
+            }
+        }
+    }
+
+    fun eliminarOportunidad(id: Long, onListo: () -> Unit, onError: (String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                if (repository.eliminar(id) == 0) {
+                    onError("No se encontró la oportunidad para eliminarla.")
+                    return@launch
+                }
+                onListo()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onError("No se pudo eliminar la oportunidad: ${e.message}")
             }
         }
     }

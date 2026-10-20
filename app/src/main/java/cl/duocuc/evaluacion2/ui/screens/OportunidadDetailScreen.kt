@@ -13,20 +13,28 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -51,10 +59,14 @@ fun OportunidadDetailScreen(
     viewModel: OportunidadViewModel,
     onVolver: () -> Unit,
     onEditar: () -> Unit,
+    onEliminada: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val oportunidades by viewModel.oportunidades.collectAsState()
     val oportunidad = oportunidades.firstOrNull { it.id == id }
+    var confirmarEliminacion by remember(id) { mutableStateOf(false) }
+    var eliminando by remember(id) { mutableStateOf(false) }
+    var errorEliminacion by remember(id) { mutableStateOf<String?>(null) }
 
     Scaffold(
         modifier = modifier,
@@ -93,16 +105,74 @@ fun OportunidadDetailScreen(
         } else {
             DetalleContenido(
                 oportunidad = oportunidad,
+                onEliminar = { confirmarEliminacion = true },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             )
         }
     }
+
+    if (confirmarEliminacion && oportunidad != null) {
+        AlertDialog(
+            onDismissRequest = {
+                if (!eliminando) {
+                    confirmarEliminacion = false
+                    errorEliminacion = null
+                }
+            },
+            title = { Text("Eliminar oportunidad") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("¿Seguro que deseas eliminar «${oportunidad.nombre}»? Esta acción no se puede deshacer.")
+                    errorEliminacion?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = !eliminando,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    ),
+                    onClick = {
+                        eliminando = true
+                        errorEliminacion = null
+                        viewModel.eliminarOportunidad(
+                            id = id,
+                            onListo = onEliminada,
+                            onError = { mensaje ->
+                                eliminando = false
+                                errorEliminacion = mensaje
+                            }
+                        )
+                    }
+                ) {
+                    Text(if (eliminando) "Eliminando..." else "Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    enabled = !eliminando,
+                    onClick = {
+                        confirmarEliminacion = false
+                        errorEliminacion = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
 }
 
 @Composable
-private fun DetalleContenido(oportunidad: OpportunityEntity, modifier: Modifier = Modifier) {
+private fun DetalleContenido(
+    oportunidad: OpportunityEntity,
+    onEliminar: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val tipo = TipoOportunidad.desdeNombre(oportunidad.tipo)
     val prioridad = Prioridad.desdeNombre(oportunidad.prioridad)
     val potencial = PotencialComercial.desdeNombre(oportunidad.potencialComercial)
@@ -169,6 +239,17 @@ private fun DetalleContenido(oportunidad: OpportunityEntity, modifier: Modifier 
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        OutlinedButton(
+            onClick = onEliminar,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = MaterialTheme.colorScheme.error
+            )
+        ) {
+            Icon(Icons.Outlined.Delete, contentDescription = null)
+            Text("Eliminar oportunidad", modifier = Modifier.padding(start = 8.dp))
+        }
 
         Spacer(Modifier.height(8.dp))
     }
